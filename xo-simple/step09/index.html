@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Week1 XO</title>
+	<style type="text/css">
+		.box {
+			width: 150px;
+			height: 150px;
+			margin:auto;
+			display: inline-block; 
+			border: 1px solid gray; 
+			border-radius: 2px;
+			background: #D8D8D8;
+		}
+		.box-red {
+			background: #FF0000;
+		}
+		.box-blue {
+			background: #2E2EFE;
+		}
+	</style>
+</head>
+<body>
+	<center>
+	<h1>Tic Tac Toe</h1>
+	<span class="box box-red"></span>
+	<span class="box box-blue"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	</center>
+	<script type="text/javascript">
+		var playerTurn = true;
+		var box = document.getElementsByClassName('box');
+		var nBox = box.length;
+
+		function isGameEnd() {
+			// something...
+		}
+
+		function changeColor(e) {
+			if (this.className.split(' ').length == 1) {
+				this.className = "box box-" + (playerTurn ? "red": "blue"); // this mean box[i]	
+				playerTurn = (playerTurn + 1) % 2; // javascript dynamic datatype
+			}
+		}
+
+		for (var i = 0; i < nBox; i++) {
+			box[i].addEventListener('click', changeColor);
+		}	
+	</script>
+</body>
+</html>

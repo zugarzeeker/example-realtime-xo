@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Week1 XO</title>
+	<style type="text/css">
+		.box {
+			width: 150px;
+			height: 150px;
+			margin:auto;
+			display: inline-block; 
+			border: 1px solid gray; 
+			border-radius: 2px;
+			background: #D8D8D8;
+		}
+		.box-red {
+			background: #FF0000;
+		}
+		.box-blue {
+			background: #2E2EFE;
+		}
+	</style>
+</head>
+<body>
+	<center>
+	<h1>Tic Tac Toe</h1>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	</center>
+	<script type="text/javascript">
+		var playerTurn = true;
+		var box = document.getElementsByClassName('box');
+		var nBox = box.length;
+		var playBox = 3;
+		var everClickBox = new Array(nBox+1).join('0').split(''); // same var everClickBox = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
+
+		function checkRow() {
+			for (var i = 0; i < playBox; i++) {
+				var wingame = true;
+				for (var j = 0; j < playBox; j++) {
+					if (everClickBox[i*3 + 0] != everClickBox[i*3 + j] || everClickBox[i*3 + j] == 0) wingame = false;
+				}
+				if (wingame) return true;
+			}
+			return false;
+		}
+
+		function checkCol() {
+			for (var i = 0; i < playBox; i++) {
+				var wingame = true;
+				for (var j = 0; j < playBox; j++) {
+					if (everClickBox[0*playBox + i] != everClickBox[j*playBox + i] || everClickBox[j*playBox + i] == 0) wingame = false;
+				}
+				if (wingame) return true;
+			}
+			return false;
+		}
+
+		function checkCornor() {
+			var wingame = true;
+			for (var i = 0; i < playBox; i++) {
+				if (everClickBox[0] != everClickBox[i*playBox + i] || everClickBox[i*playBox + i] == 0) wingame = false;
+			}
+			if (wingame) return true;
+
+			wingame = true;
+			for (var i = 0; i < playBox; i++) {
+				if (everClickBox[(playBox-1)*playBox + 0] != everClickBox[(playBox-1-i)*playBox + i] || everClickBox[(playBox-1-i)*playBox + i] == 0) wingame = false;
+			}
+			if (wingame) return true;
+			return false;
+		}
+
+		function checkDraw() {
+			for (var i = 0; i < nBox; i++) {
+				if (everClickBox[i] == 0) return false;
+			}
+			return true;
+		}
+
+		function isGameEnd() {
+			return checkRow() || checkCol() || checkCornor() || checkDraw();
+		}
+
+		function fillEverClickBox() {
+			for (var i = 0; i < nBox; i++) {
+				var colorBox = box[i].className.split(' ').pop();
+				if (colorBox == 'box-red') everClickBox[i] = -1;
+				else if (colorBox == 'box-blue') everClickBox[i] = 1;
+				else everClickBox[i] = 0;
+			}
+		}
+
+		function changeColor(e) {
+			if (this.className.split(' ').length == 1) {
+				this.className = "box box-" + (playerTurn ? "red": "blue"); // this mean box[i]
+				playerTurn = (playerTurn + 1) % 2; // javascript dynamic datatype
+				fillEverClickBox();
+				if (isGameEnd()) {
+					alert("GameEnd");
+				}
+			}
+		}
+
+		for (var i = 0; i < nBox; i++) {
+			box[i].addEventListener('click', changeColor);
+		}
+
+	</script>
+</body>
+</html>

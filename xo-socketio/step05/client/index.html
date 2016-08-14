@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Week1 XO</title>
+	<style type="text/css">
+		.box {
+			width: 150px;
+			height: 150px;
+			margin:auto;
+			display: inline-block;
+			border: 1px solid gray;
+			border-radius: 2px;
+			background: #D8D8D8;
+		}
+		.box-red {
+			background: #FF0000;
+		}
+		.box-blue {
+			background: #2E2EFE;
+		}
+		.player-red {
+			color: #FF0000;
+		}
+		.player-blue {
+			color: #2E2EFE;
+		}
+	</style>
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+	<center>
+	<h1>Tic Tac Toe</h1>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<span class="box"></span>
+	<span class="box"></span>
+	<span class="box"></span><br>
+	<h2 id="username">Username ???</h2>
+	</center>
+
+
+	<script type="text/javascript">
+		var isPlayer = false;
+		var username = prompt("Username ?") || "NoUserName";
+		$('#username').text(username);
+	</script>
+	<script src="http://localhost:8000/socket.io/socket.io.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var socket = io.connect('http://localhost:8000');
+		socket.on('connect', function() {
+			console.log('connected');
+			clearUI();
+			socket.emit('join', username);
+		});
+	</script>
+	<script>
+		function fillColorBox(boxs) {
+			for (var i = 0, nBox = boxs.length; i < nBox; i++) {
+				var box = $('.box')[i];
+				console.log('box');
+				console.log(box);
+				box = $(box);
+				if (boxs[i] == -1) box.addClass("box-red");
+				else if (boxs[i] == 1) box.addClass("box-blue");
+				else {
+					box.removeClass();
+					box.addClass("box");
+				}
+			}
+		}
+
+		function clearUI() {
+			$('.box').each(function(index) {
+				$(this).className = 'box';
+			});
+			$('#username').removeClass()
+		}
+
+		function gameEnd() {
+			isPlayer = false;
+			alert("GameEnd");
+			clearUI();
+			socket.emit('regame', '');
+		}
+
+		function setPlayer(color) {
+			$('#username').removeClass();
+			$('#username').addClass(color == 'red' ? 'player-red' : 'player-blue');
+			isPlayer = true;
+		}
+
+		socket.on('fillcolor', function(boxs) {
+			fillColorBox(boxs);
+		});
+
+		socket.on('gameend', function() {
+			gameEnd();
+		});
+
+		socket.on('canplay', function(color) {
+			setPlayer(color);
+		});
+
+		$('.box').click(function(index) {
+			console.log('click box');
+			var position = $('.box').index(this);
+			console.log(position);
+			console.log(this.className == "box");
+			if (isPlayer && this.className == "box") socket.emit('update', position);
+		});
+	</script>
+
+</body>
+</html>
