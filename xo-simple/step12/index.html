@@ -122,8 +122,10 @@
 				playerTurn = (playerTurn + 1) % 2; // javascript dynamic datatype
 				fillEverClickBox();
 				if (isGameEnd()) {
-					alert("GameEnd");
-					clearGame();
+					setTimeout(function() {
+						alert("GameEnd");
+						clearGame();
+					}, 500)
 				}
 			}
 		}
